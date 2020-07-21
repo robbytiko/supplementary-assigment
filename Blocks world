@@ -1,0 +1,285 @@
+
+    function init(self, initial, goal=None)
+        """The constructor specifies the initial state, and possibly a goal
+        state, if there is a unique goal.  Your subclass's constructor can add
+        other arguments."""
+        self.initial = initial; self.goal = goal
+   end
+        #each state corresponds to a tuple containing tuples, for example state((1,2,3),(4,5)) corresponds to
+        #
+        # 3
+        # 2 5
+        #_1_4_
+
+    function compgoalstate1(self,s) 
+        sum=0
+        for j in s 
+            for i in self.goal
+                if j[0] in i
+                    stack_to_comp=i
+end
+end
+end
+
+                 for c1 in j
+                if (c1 in stack_to_comp)
+                    elseif j.index(c1)==stack_to_comp.index(c1)
+   end
+end
+                sum+=len(j)-j.index(c1) #all blcks above c1 must be moved +1 move for each
+                for k in j[j.index(c1)] #checking if any of the blocks above needs two moves
+                    if j.index(k)==0
+                        end
+end
+                    for m in self.goal
+                        state2=0
+                        if (k in m) & (m.index(k)!=0)
+end
+end
+                            for l  in j[:j.index(k)]
+                                if l in m & m.index(k)>m.index(l)      #if there any blocks below block k both in current and goal
+                                    sum=sum+1                               #then they must be moved in the right place then k will
+                                    state2=1                              #be able to be placed in it's correct position but before that
+                                                           #it should be placed on the table, so k requires 2 moves!
+                            elseif state2!=1#here checking if the position of q cube is available or not if not +1 move
+                                state2=1
+                                state3=0
+end
+end
+                                for q in s
+                                    if m[0] in q
+                                        if len(q)>m.index(k) || len(q)<m.index(k)-1# not equal with  m.index(k)
+                                            sum=sum+1
+                                            end
+end
+end
+                                           for c2 in m
+                                                for c3 in q
+                                                    if c2!=c3
+                                                        sum+=1
+                                                        state3=1
+                                                       
+                                                elseif state3==1
+                                                   
+                                    elseif state3==1
+                                      
+                        elseif state2==1
+                            
+end
+end
+end                
+        # print s,sum
+        return sum
+end
+    function compgoalstate2(self,s) 
+        sum=0
+        for j in s 
+            for i in self.goal
+                if j[0] in i
+                    stack_to_comp=i
+                    end
+            for c1 in j
+                if (c1 in stack_to_comp)
+                    if j.index(c1)==stack_to_comp.index(c1)
+                        
+                sum=sum+len(j)-j.index(c1) #all blcks above c1 must be moved +1 move for each
+                for k in j[j.index(c1)] #checking if any of the blocks above needs two moves
+                    if j.index(k)==0
+                       for m in self.goal
+                        state2=0
+                        if (k in m) & (m.index(k)!=0)
+                            for l  in j[:j.index(k)]
+                                if l in m & m.index(k)>m.index(l)      #if there any blocks below block k both in current and goal
+                                    sum=sum+1                                #then they must be moved in the right place then k will
+                                    state2=1                              #be able to be placed in it's correct position but before that
+                                end                                     #it should be placed on the table, so k requires 2 moves!
+                                if state2==1
+                            end
+end
+end
+end
+end
+end
+end
+end
+end
+end
+
+        # print s,sum
+        return sum
+end
+end
+    function compgoalstate3(self,s) #checking whether a block sits on the right place(table/block)
+        sum=0
+        for j in s 
+            for c1 in j
+                for i in self.goal
+                    if c1 in i
+                        if (i.index(c1)==0 & j.index(c1)!=0) || (i.index(c1)!=0 & j.index(c1)==0)
+                            sum=sum+1
+                           elseif i[i.index(c1)-1]!=j[j.index(c1)-1]
+                            sum=sum+1
+end
+end
+end
+end
+end
+                            
+        # print s,sum
+        return sum
+end
+
+   function actions(self,state) 
+        validActions=[]
+        for column_i in state 
+            if len(column_i) > 1  #each action is depicted by the pair of the initial stack ,the destination
+                validActions.append((state.index(column_i),'N',1))#of the cube and the length of the destination stack after the cube is placed.
+end
+end
+            for column_j in state                        #example (1,2,3) means take cube from stack 1 and place it on stack 3
+                if column_i!=column_j 
+                   # validActions.append((state.index(column_i),state.index(column_j),len(column_j)+1))
+end
+end
+       # validActions.sort(key=lambda x: int(x[2]))
+        return validActions
+end
+#--------------------------------------------------------------------
+    function result(self, state, action) 
+        temp=list(state)
+        LastCubeInColumnI=temp[action[0]][-1]
+        temp.remove(state[action[0]])
+        if len(state[action[0]]) > 1 
+            temp.append(state[action[0]][0:-1])
+        elseif action[1]=='N' 
+            temp.append((LastCubeInColumnI,))
+        else 
+            temp.remove(state[action[1]])
+            temp.append(state[action[1]]+(LastCubeInColumnI,))
+       # temp.sort(key = lambda s: len(s))
+end
+        return tuple(temp)
+end
+
+    function goal_test(self,state) 
+        for i in state
+            if i not in self.goal
+                return False
+end
+        return True
+end
+end
+
+using Random
+
+Random.Random
+Random.rand!
+
+function remove!(collection::AbstractVector, item)
+  index = findfirst(isequal(item), collection)
+  if index === nothing
+    error("$item is not in $collection")
+  else
+    deleteat!(collection, index)
+  end
+end
+
+function h1(n) 
+    return p.compgoalstate1(n.state)
+end
+function h2(n) 
+    return p.compgoalstate2(n.state)
+end
+function h3(n) 
+    return p.compgoalstate3(n.state)
+end
+
+function Random_state(n)
+    Random.seed!()
+    sizeofstart=Random.rand!(1,n)
+    start=[]
+    for i in range(0,sizeofstart)
+        start.append!(['a',])
+end
+    for i in range(0,n)
+        x=Random.rand!(0,sizeofstart-1)
+        start[x].append!(i)
+        if 'a' in start[x]
+            start[x].remove!('a')
+end
+end
+    fstart=[]
+    for i in start
+        if 'a' not in i
+            fstart.append!(tuple(i))
+    tuplestart=tuple(fstart)
+    sizeofend=Random.randint(1,n)
+    done=[]
+end
+end
+    for i in range(0,sizeofend)
+        done.append!(['a',])
+    for i in range(0,n)
+        x=Random.rand!(0,sizeofend-1)
+        done[x].append!(i)
+        if 'a' in done[x]
+            done[x].remove!('a')
+    fend=[]
+end
+end
+end
+    for i in done
+        if 'a' not in i
+            fend.append!(tuple(i))
+    tupleend=tuple(fend)
+    problem=(tuplestart,tupleend,)
+end
+end
+    return problem
+end
+
+
+  
+
+println("Enter number of cubes : 4")
+num_of_cubes=4
+println("Enter the number of tables:")
+tables=1
+
+println("Enter the number of the heuristic you want to use:")
+num=2
+#if num!=1 & num!=2 & num!=3
+  #  print("ERROR")
+    #assert(1)
+#end
+x=0
+for i in 0:num_of_tests
+    x=Random_state(num_of_cubes)
+    println("Initial state :",x[0])
+    println("Goal state :",x[1])
+    # p=BlocksWorld(((3,2,),(5,4)),((3,4),(5,2)))
+    p=BlocksWorld(x[0],x[1])
+    # s = breadth_first_search(p)
+    if num==1
+        s = astar_search(p,h1)
+    elseif num==2
+        s = astar_search(p,h2)
+    else
+        s = astar_search(p,h3)
+    sol = s.solution()
+    path= s.path()
+end
+end
+println("Solution: \n+{0}+\n|Action \t|State\t\t\t\t	 \t|Path Cost |\n+{0}+".format('-'*74))
+  for i in len:(path)) 
+        state = path[i].state
+      cost = path[i].path_cost
+        action = "(S, S) "
+        if i > 0  # The initial state has not an action that results to it
+          action = sol[i-1]
+            width=10
+end
+end
+        println(action , state , cost)
+    
+
